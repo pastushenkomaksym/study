@@ -7,12 +7,11 @@ class Persona(models.Model):
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=20)
     email = models.EmailField(max_length=254)
-    phone_regex = RegexValidator(regex=r'^380\d{9}$', message='Phone number must be entered in format 380XXXXXXXXX')
+    phone_regex = RegexValidator(regex=r'^\+380\d{9}$', message='Phone number must be entered in format +380XXXXXXXXX')
     phone_number = models.CharField(validators=[phone_regex], max_length=13)
 
     class Meta:
         abstract = True
-
 
 
 class Teacher(Persona):
