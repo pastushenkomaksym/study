@@ -1,17 +1,35 @@
 from django.db import models
 from django.core.validators import MaxValueValidator
 from django.core.validators import RegexValidator
-
+from django.core.exceptions import ValidationError
+import re
 
 class Persona(models.Model):
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=20)
     email = models.EmailField(max_length=254)
-    phone_regex = RegexValidator(regex=r'^\+380\d{9}$', message='Phone number must be entered in format +380XXXXXXXXX')
-    phone_number = models.CharField(validators=[phone_regex], max_length=13)
+    #phone_regex = RegexValidator(regex=r'^\+380\d{9}$', message='Phone number must be entered in format +380XXXXXXXXX')
+    #phone_number = models.CharField(validators=[phone_regex], max_length=13)
+    phone_number = models.CharField(max_length=13)
 
     class Meta:
         abstract = True
+
+    def my_validator(val, value_valid):
+        is_match = re.match(val, value_valid)
+        return is_match
+
+    first_name_valid = r'^({a-zA-Z}+{a-zA-Z }?)$'
+    phone_valid = r'^\+380\d{9}$'
+    last_name_valid = r'^({a-zA-Z}+{a-zA-Z\-}?)$'
+
+    def clean(self):
+        if not self.my_validator(self.phone_number, self.phone_valid):
+            raise ValidationError('not correct number')
+        if not self.my_validator(self.first_name, self.first_name_valid):
+            raise ValidationError('not correct number')
+        if not self.my_validator(self.last_name, self.last_name_valid):
+            raise ValidationError('not correct number')
 
 
 class Teacher(Persona):

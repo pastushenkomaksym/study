@@ -3,6 +3,7 @@ from .forms import TeacherForm, StudentForm, ClasForm
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views import View
 
+
 class ClasView(View):
     form_class = ClasForm
     template_name = 'unv/add_class.html'
