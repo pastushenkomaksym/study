@@ -1,20 +1,51 @@
 from django.shortcuts import render
-from .forms import Teachers, Student, Clas
+from .forms import TeacherForm, StudentForm, ClasForm
+from django.http import HttpResponse, HttpResponseRedirect
+from django.views import View
+
+class ClasView(View):
+    form_class = ClasForm
+    template_name = 'unv/add_class.html'
+
+    def get(self, request, *args, **kwargs):
+        form = self.form_class()
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('SUCCESS')
+        return render(request, self.template_name, {'form': form})
 
 
-def add_clas(request):
-    data = {'text':'Add class', 'form':Clas}
-    return render(request, 'unv/add_class.html', data)
+class TeacherView(View):
+    form_class = TeacherForm
+    template_name = 'unv/add_teacher.html'
+
+    def get(self, request, *args, **kwargs):
+        form = self.form_class()
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('SUCCESS')
+        return render(request, self.template_name, {'form': form})
 
 
-def add_student(request):
-    data = {'text': 'Add student', 'form': Student}
-    return render(request, 'unv/add_student.html', data)
+class StudentView(View):
+    form_class = StudentForm
+    template_name = 'unv/add_student.html'
 
+    def get(self, request, *args, **kwargs):
+        form = self.form_class()
+        return render(request, self.template_name, {'form': form})
 
-def add_teachers(request):
-    data = {'text': 'Add teacher', 'form': Teachers}
-    return render(request, 'unv/add_teacher.html', data)
-
-
-
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('SUCCESS')
+        return render(request, self.template_name, {'form': form})

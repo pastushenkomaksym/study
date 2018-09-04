@@ -1,22 +1,20 @@
 from django import forms
+from .models import Student, Teacher, Clas
 
 
-class Persona(forms.Form):
-    first_name = forms.CharField(label='First name', max_length=20)
-    last_name = forms.CharField(label='Last name', max_length=20)
-    email = forms.EmailField(label= 'email', max_length=254)
-    phone_number = forms.CharField(label='phone_number', max_length=13)
+class TeacherForm(forms.ModelForm):
+    class Meta:
+        model = Teacher
+        fields = ('first_name', 'last_name', 'email', 'phone_number', 'subj')
 
 
-class Teachers(Persona):
-    subj = forms.CharField(label='subj', max_length=20)
+class StudentForm(forms.ModelForm):
+    class Meta:
+        model = Student
+        fields = ('first_name', 'last_name', 'email', 'phone_number', 'avg_mark', 'clas')
 
 
-class Clas(forms.Form):
-    name = forms.CharField(label='name', max_length=20)
-    teacher = forms.CharField(label='teacher', max_length=20)
-
-
-class Student(Persona):
-    avg_mark = forms.IntegerField(max_value=100)
-    clas = forms.CharField(max_length=3)
+class ClasForm(forms.ModelForm):
+    class Meta:
+        model = Clas
+        fields = ('name', 'teacher')

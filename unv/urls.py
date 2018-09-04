@@ -1,9 +1,9 @@
 from django.urls import path
-
-from . import views
+from django.contrib.auth.decorators import login_required
+from unv.views import ClasView, TeacherView, StudentView
 
 urlpatterns = [
-    path('add_class', views.add_clas, name='index'),
-    path('add_teacher', views.add_teachers, name='index'),
-    path('add_student', views.add_student, name='index'),
+    path('add_class', ClasView.as_view(), name='class'),
+    path('add_teacher', login_required(TeacherView.as_view(), login_url='/login'), name='teacher'),
+    path('add_student', StudentView.as_view(), name='student'),
 ]
