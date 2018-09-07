@@ -15,21 +15,23 @@ class Persona(models.Model):
     class Meta:
         abstract = True
 
-    def my_validator(val, value_valid):
-        is_match = re.match(val, value_valid)
+    def my_validator(self, val, value_valid):
+
+        is_match = value_valid.search(val)
+        print(val, value_valid, is_match)
         return is_match
 
-    first_name_valid = r'^({a-zA-Z}+{a-zA-Z }?)$'
-    phone_valid = r'^\+380\d{9}$'
-    last_name_valid = r'^({a-zA-Z}+{a-zA-Z\-}?)$'
+    first_name_valid = re.compile(r'([a-zA-Z]+[a-zA-Z ]?)')
+    phone_valid = re.compile(r'\+380\d{9}')
+    last_name_valid = re.compile(r'([a-zA-Z]+[a-zA-Z\-]?)')
 
     def clean(self):
         if not self.my_validator(self.phone_number, self.phone_valid):
             raise ValidationError('not correct number')
         if not self.my_validator(self.first_name, self.first_name_valid):
-            raise ValidationError('not correct number')
+            raise ValidationError('not correct first name')
         if not self.my_validator(self.last_name, self.last_name_valid):
-            raise ValidationError('not correct number')
+            raise ValidationError('not correct last_name')
 
 
 class Teacher(Persona):
