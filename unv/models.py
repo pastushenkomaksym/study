@@ -3,6 +3,10 @@ from django.core.validators import MaxValueValidator
 from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
 import re
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 class Persona(models.Model):
     first_name = models.CharField(max_length=20)
@@ -18,19 +22,21 @@ class Persona(models.Model):
     def my_validator(self, val, value_valid):
 
         is_match = value_valid.search(val)
-        print(val, value_valid, is_match)
         return is_match
 
-    first_name_valid = re.compile(r'([a-zA-Z]+[a-zA-Z ]?)')
+    first_name_valid = re.compile(r'^[A-z]+\ ?[A-z]?$')
     phone_valid = re.compile(r'\+380\d{9}')
-    last_name_valid = re.compile(r'([a-zA-Z]+[a-zA-Z\-]?)')
+    last_name_valid = re.compile(r'^[A-z]+\-?[A-z]?$')
 
     def clean(self):
         if not self.my_validator(self.phone_number, self.phone_valid):
+            logger.warning('bad user, wrong data number')
             raise ValidationError('not correct number')
         if not self.my_validator(self.first_name, self.first_name_valid):
+            logger.warning('bad user, wrong data first name')
             raise ValidationError('not correct first name')
         if not self.my_validator(self.last_name, self.last_name_valid):
+            logger.warning('bad user, wrong data last name')
             raise ValidationError('not correct last_name')
 
 
